@@ -10,7 +10,7 @@ class Game:
         
         # Генерация пустой матрицы [[" ", " ", " "], [" ", " ", " "], [" ", " ", " "]]
         self.box : list[list[str]] = [[self.empty for i in range(3)] for j in range(3)]
-
+    
     def run(self) -> None:
         # Вызов обновления и вывод матрицы
         self.update_matrix()
@@ -26,7 +26,10 @@ class Game:
             # Создаём список значений строки поля и объединяем её
             string = "|".join([self.box[y][x] for x in range(3)])
             print(string)
-            
+
+    def a(self):
+        0
+        
 if __name__ == "__main__":
     # Запуск игры
     new_game : Game = Game()
