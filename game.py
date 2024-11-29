@@ -28,7 +28,10 @@ class Game:
             print(string)
 
     def test(self) -> None:
-        print(True)_
+        print(True)
+    
+    def alfa(self) -> None:
+        print(0)
     
 
 if __name__ == "__main__":
