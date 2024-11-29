@@ -26,11 +26,7 @@ class Game:
             # Создаём список значений строки поля и объединяем её
             string = "|".join([self.box[y][x] for x in range(3)])
             print(string)
-    
-    def alfa(self) -> None:
-        print(0)
-    
-
+            
 if __name__ == "__main__":
     # Запуск игры
     new_game : Game = Game()
