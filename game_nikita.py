@@ -1,8 +1,7 @@
 import random
-import os
 
 
-class Player():
+class Player:
     def __init__(self, n):
         self.n = n
         self.user1 = ''
@@ -11,7 +10,7 @@ class Player():
         self.step = 0
 
     def __str__(self):
-        s = '   1 | 2 | 3 |\n'
+        s = '   ' + f'{" | ".join(str(i) for i in range(1, self.n+1))}' + '\n'
         for i in range(self.n):
             s += str(i + 1) + '|'
             for j in range(self.n):
@@ -25,49 +24,49 @@ class Player():
             for j in range(self.n):
                 if self.board[i][j] != '-':
                     count += 1
-        if count == 9:
+        if count == self.n**2:
             return False
         else:
             return True
 
     def check_gor(self):
         for i in range(self.n):
-            if self.board[i][0] == self.board[i][1] and self.board[i][0] == self.board[i][2] \
-                    and self.board[i][0] != '-':
+            if len(set(self.board[i][j] for j in range(self.n))) == 1 and self.board[i][0] != '-':
                 return False
         return True
 
     def check_vert(self):
         for j in range(self.n):
-            if self.board[0][j] == self.board[1][j] and self.board[1][j] == self.board[2][j] \
-                    and self.board[0][j] != '-':
+            if len(set(self.board[i][j] for i in range(self.n))) == 1 and self.board[0][j] != '-':
                 return False
         return True
 
     def check_diag(self):
-        if self.board[0][0] == self.board[1][1] and self.board[0][0] == self.board[2][2] and self.board[0][0] != '-':
-            return False
-        elif self.board[2][0] == self.board[1][1] and self.board[2][0] == self.board[0][2] and self.board[1][1] != '-':
+        for j in range(self.n):
+            if len(set(self.board[i][i] for i in range(self.n))) == 1 and self.board[0][0] != '-' \
+                    or len(set(self.board[i][j] for i in range(self.n))):
+                return False
+#self.board[2][0] == self.board[1][1] and self.board[2][0] == self.board[0][2] and self.board[1][1] != '-'
             return False
         else:
             return True
-
-    def update_matrix(self):
-        os.system("cls")
-        print(self)
             
     def step_game(self, user):
-        row = int(input('Введите строку: ')) - 1
-        col = int(input('Введите колонку: ')) - 1
+        if user == self.user1:
+            row = int(input('Введите строку: ')) - 1
+            col = int(input('Введите колонку: ')) - 1
+        else:
+            row = random.randint(0, self.n - 1)
+            col = random.randint(0, self.n - 1)
         if self.board[row][col] != '-':
             print('Так нельзя ходить')
         else:
             self.board[row][col] = user
             self.step += 1
-        Player.update_matrix(self)
+        print(self)
 
     def go(self):
-        Player.update_matrix(self)
+        print(self)
         # определяем кто будет ходить первым? (random) если 1 - Х, иначе 0 в self.user1
         first = random.randint(0, 1)
         if first == 0:
@@ -83,8 +82,7 @@ class Player():
         #1 - где-то по горизонтали не соберётся комбинаци,
         #2 - где-то по вертикали не соберётся комбинаци,
         #3 - где-то по диагонали не соберётся комбинаци,
-        while Player.check_gor(self) is True and Player.check_vert(self) is True and Player.check_diag(self) is True \
-                and Player.check_all(self) is True:
+        while all((Player.check_gor(self), Player.check_vert(self), Player.check_diag(self), Player.check_all(self))):
             if self.step % 2 == 0:
                 print('Ходит', self.user1)
                 Player.step_game(self, self.user1)
@@ -100,7 +98,7 @@ class Player():
                 print('Выиграл', self.user1)
 
 
-        #4 - пока все 9 будут не заполнены,
+        # - пока все поля будут не заполнены,
         #---
 
             #если self.step - чётный, то ходит первый, то есть self.user1
