@@ -42,11 +42,13 @@ class Player:
         return True
 
     def check_diag(self):
-        for j in range(self.n):
-            if len(set(self.board[i][i] for i in range(self.n))) == 1 and self.board[0][0] != '-' \
-                    or len(set(self.board[i][j] for i in range(self.n))):
-                return False
-#self.board[2][0] == self.board[1][1] and self.board[2][0] == self.board[0][2] and self.board[1][1] != '-'
+        j = self.n - 1
+        set_diag = set()
+        for i in range(self.n):
+            set_diag.add(self.board[i][j])
+            j -= 1
+        if (len(set(self.board[i][i] for i in range(self.n))) == 1 and self.board[0][0] != '-') \
+           or (len(set_diag) == 1 and self.board[0][self.n-1] != '-'):
             return False
         else:
             return True
@@ -56,8 +58,8 @@ class Player:
             row = int(input('Введите строку: ')) - 1
             col = int(input('Введите колонку: ')) - 1
         else:
-            row = random.randint(0, self.n - 1)
-            col = random.randint(0, self.n - 1)
+            right_combs = [(i, j) for j in range(self.n) for i in range(self.n) if self.board[i][j] == '-']
+            row, col = random.choice(right_combs)
         if self.board[row][col] != '-':
             print('Так нельзя ходить')
         else:
@@ -70,11 +72,11 @@ class Player:
         # определяем кто будет ходить первым? (random) если 1 - Х, иначе 0 в self.user1
         first = random.randint(0, 1)
         if first == 0:
-            self.user1 = '0'
+            self.user1 = 'O'
             self.user2 = 'X'
         else:
             self.user1 = 'X'
-            self.user2 = '0'
+            self.user2 = 'O'
         # игра начинается
         # пока один из 4 вариантов не сработает:
         # WHILE
@@ -84,18 +86,18 @@ class Player:
         #3 - где-то по диагонали не соберётся комбинаци,
         while all((Player.check_gor(self), Player.check_vert(self), Player.check_diag(self), Player.check_all(self))):
             if self.step % 2 == 0:
-                print('Ходит', self.user1)
+                print(f'Ходит "{self.user1}"')
                 Player.step_game(self, self.user1)
             else:
-                print('Ходит', self.user2)
+                print(f'"{self.user2}" сходил')
                 Player.step_game(self, self.user2)
         if Player.check_all(self) is False:
             print('Ничья')
         else:
             if self.step % 2 == 0:
-                print('Выиграл', self.user2)
+                print(f'Выиграл "{self.user2}"')
             else:
-                print('Выиграл', self.user1)
+                print(f'Выиграл "{self.user1}"')
 
 
         # - пока все поля будут не заполнены,
